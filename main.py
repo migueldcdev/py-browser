@@ -1,6 +1,21 @@
 import socket
 import ssl
 
+class Request:
+    def __init__(self, path, host):
+        self.path = path
+        self.host = host
+    def createRequest(self):
+        request = "GET {} HTTP/1.0\r\n".format(self.path)
+        request += "Host: {}\r\n".format(self.host)
+        request += "Connection: {}\r\n".format("close")
+        request += "User-Agent: Py-Browser/1.0\r\n" 
+        # essential to put two \r\n newlines, otherwise 
+        # the other computer will keep waiting for them
+        request += "\r\n"
+
+        return request
+
 class URL: 
     def __init__(self, url):
         self.scheme, url = url.split("://", 1)
@@ -34,11 +49,8 @@ class URL:
             ctx = ssl.create_default_context()
             s = ctx.wrap_socket(s, server_hostname=self.host)
 
-        request = "GET {} HTTP/1.0\r\n".format(self.path)
-        request += "Host: {}\r\n".format(self.host)
-        # essential to put two \r\n newlines, otherwise 
-        # the other computer will keep waiting for them
-        request += "\r\n"
+        request = Request(self.path, self.host).createRequest()
+
         s.send(request.encode("utf8"))
 
         response = s.makefile("r", encoding="utf-8", newline="\r\n")
@@ -57,9 +69,6 @@ class URL:
         content = response.read()
         s.close()
         return content
-
-   
-
     
 def show(body):
     in_tag = False
