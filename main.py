@@ -6,8 +6,8 @@ class URL:
         assert self.scheme == "http"
         if "/" not in url:
             url = url + "/"
-            self.host, url = url.split("/", 1)
-            self.path = "/" + url
+        self.host, url = url.split("/", 1)
+        self.path = "/" + url
 
     def request(self):
         s = socket.socket(
@@ -15,7 +15,7 @@ class URL:
             type = socket.SOCK_STREAM,
             proto=socket.IPPROTO_TCP,
         )
-
+      
         s.connect((self.host, 80))
 
         request = "GET {} HTTP/1.0\r\n".format(self.path)
