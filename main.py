@@ -1,11 +1,11 @@
 import socket
 import ssl
 
-class Request:
+class RequestHeaders:
     def __init__(self, path, host):
         self.path = path
         self.host = host
-    def createRequest(self):
+    def createRequestHeaders(self):
         request = "GET {} HTTP/1.0\r\n".format(self.path)
         request += "Host: {}\r\n".format(self.host)
         request += "Connection: {}\r\n".format("close")
